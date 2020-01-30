@@ -44,7 +44,8 @@
         android:hint="Systolic pressure"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_record_text_date">
+        app:layout_constraintTop_toBottomOf="@+id/new_record_text_date"
+        app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/new_record_editText_systolic"
             android:layout_width="match_parent"
@@ -60,7 +61,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_record_text_systolic">
+        app:layout_constraintTop_toBottomOf="@+id/new_record_text_systolic"
+        app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/new_record_editText_diastolic"
             android:layout_width="match_parent"
@@ -76,7 +78,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_record_text_diastolic">
+        app:layout_constraintTop_toBottomOf="@+id/new_record_text_diastolic"
+        app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/new_record_editText_heart_rate"
             android:layout_width="match_parent"
@@ -97,7 +100,8 @@
             android:id="@+id/new_record_editText_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine" />
+            android:inputType="textMultiLine"
+            android:maxLength="20"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

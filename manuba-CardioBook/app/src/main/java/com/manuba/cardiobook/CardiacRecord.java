@@ -3,12 +3,18 @@ package com.manuba.cardiobook;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "cardiac_record")
@@ -32,6 +38,15 @@ public class CardiacRecord implements Parcelable {
     @Nullable
     @ColumnInfo(name = "commment")
     private String comment;
+
+    @Ignore
+    public final static String DATE_PATTERN = "yyyy-MM-dd";
+
+    @Ignore
+    public final static String TIME_FORMAT = "HH:mm";
+
+    @Ignore
+    public static final int COMMENT_LIMIT = 20;
 
     public CardiacRecord() {}
 
@@ -62,21 +77,50 @@ public class CardiacRecord implements Parcelable {
     }
 
     public void setDate(String dateInput) {
-        // todo: implement
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.US);
+        try {
+            Date newDate = dateFormat.parse(dateInput);
+            Calendar inputCalendar = Calendar.getInstance();
+            inputCalendar.setTime(newDate);
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.setTime(dateTime);
+            currentCalendar.set(Calendar.YEAR, inputCalendar.get(Calendar.YEAR));
+            currentCalendar.set(Calendar.MONTH, inputCalendar.get(Calendar.MONTH));
+            currentCalendar.set(Calendar.DAY_OF_MONTH, inputCalendar.get(Calendar.DAY_OF_MONTH));
+        } catch (ParseException ignore) {}
     }
 
     public String getDate() {
-        // todo: implement
-        return "";
+        if (dateTime != null) {
+            DateFormat dateFormat = DateFormat.getDateInstance();
+            return dateFormat.format(dateTime);
+        } else {
+            // room does something that calls this function
+            return "";
+        }
     }
 
     public void setTime(String timeInput) {
-        // todo: implement
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT, Locale.US);
+        try {
+            Date newDate = timeFormat.parse(timeInput);
+            Calendar inputCalendar = Calendar.getInstance();
+            inputCalendar.setTime(newDate);
+            Calendar currentCalendar = Calendar.getInstance();
+            currentCalendar.setTime(dateTime);
+            currentCalendar.set(Calendar.HOUR_OF_DAY, inputCalendar.get(Calendar.HOUR_OF_DAY));
+            currentCalendar.set(Calendar.MINUTE, inputCalendar.get(Calendar.MINUTE));
+        } catch (ParseException ignore) {}
     }
 
     public String getTime() {
-        // todo: implement
-        return "";
+        if (dateTime != null) {
+            DateFormat timeFormat = DateFormat.getTimeInstance();
+            return timeFormat.format(dateTime);
+        } else {
+            // room does something that calls this function
+            return "";
+        }
     }
 
     public int getSystolicPressure() {

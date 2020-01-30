@@ -7,11 +7,11 @@ import androidx.room.TypeConverter;
 public class Converters {
     @TypeConverter
     public static Date fromTimestamp(Long value) {
-        return  value == null ? null : new Date(value);
+        return value == null ? null : new Date(value);
     }
 
     @TypeConverter
     public static Long dateToTimestamp(Date date) {
-        return date == null ? null : date.getTime();
+        return date == null ? 0 : date.getTime();
     }
 }
