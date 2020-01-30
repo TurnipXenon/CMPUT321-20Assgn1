@@ -6,20 +6,28 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+
     private RecyclerView recyclerView;
     private RecordListAdapter adapter;
+    private CardiacRecordViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
+        viewModel = new ViewModelProvider.AndroidViewModelFactory(
+                getApplication()).create(CardiacRecordViewModel.class);
+        viewModel.getAllRecords().observe(this, new Observer<List<CardiacRecord>>() {
+            @Override
+            public void onChanged(List<CardiacRecord> cardiacRecords) {
+                adapter.setCardiacRecords(cardiacRecords);
+            }
+        });
 
         ArrayList<CardiacRecord> records = new ArrayList<>();
         records.add(new CardiacRecord("", "", 1, 1, 1, "Yeah"));
@@ -70,5 +87,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            // todo: do your stuff here
+            // CardiacRecord cardiacRecord = new CardiacRecord();
+            // viewModel.insert(cardiacRecord);
+        } else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.empty_not_saved,
+                    Toast.LENGTH_LONG
+            ).show();
+        }
     }
 }

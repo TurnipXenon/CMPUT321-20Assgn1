@@ -11,8 +11,14 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class NewRecordActivity extends AppCompatActivity {
+    EditText textSystolic;
+    EditText textDiastolic;
+    EditText textHeartRate;
+    EditText textComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,11 @@ public class NewRecordActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        textSystolic = findViewById(R.id.new_record_editText_systolic);
+        textDiastolic = findViewById(R.id.new_record_editText_diastolic);
+        textHeartRate = findViewById(R.id.new_record_editText_heart_rate);
+        textSystolic = findViewById(R.id.new_record_editText_comment);
     }
 
 
@@ -49,6 +60,7 @@ public class NewRecordActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
+            // todo: save here
             return true;
         }
 

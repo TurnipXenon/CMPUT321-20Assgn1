@@ -62,4 +62,9 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
     public int getItemCount() {
         return dataset.size();
     }
+
+    void setCardiacRecords(List<CardiacRecord> records) {
+        dataset = records;
+        notifyDataSetChanged();
+    }
 }
