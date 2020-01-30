@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,16 +13,19 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static final int NEW_RECORD_ACTIVITY_REQUEST_CODE = 1;
+    public static final String EXTRA_RECORD = "com.manuba.cardiobook.RECORD";
 
     private RecyclerView recyclerView;
     private RecordListAdapter adapter;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, NewRecordActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, NEW_RECORD_ACTIVITY_REQUEST_CODE);
             }
         });
     }
@@ -93,10 +95,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == NEW_RECORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK
+            && data != null && data.getExtras() != null) {
             // todo: do your stuff here
-            // CardiacRecord cardiacRecord = new CardiacRecord();
-            // viewModel.insert(cardiacRecord);
+             CardiacRecord cardiacRecord = data.getExtras().getParcelable(EXTRA_RECORD);
+            Log.d("Potato", "onActivityResult: ");
+             viewModel.insert(cardiacRecord);
+            Toast.makeText(
+                    getApplicationContext(),
+                    R.string.save_successful,
+                    Toast.LENGTH_LONG
+            ).show();
         } else {
             Toast.makeText(
                     getApplicationContext(),

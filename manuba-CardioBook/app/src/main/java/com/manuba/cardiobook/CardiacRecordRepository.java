@@ -4,7 +4,6 @@ import android.app.Application;
 
 import java.util.List;
 
-import androidx.core.graphics.drawable.WrappedDrawable;
 import androidx.lifecycle.LiveData;
 
 public class CardiacRecordRepository {
@@ -21,7 +20,12 @@ public class CardiacRecordRepository {
         return allWords;
     }
 
-    void insert(CardiacRecord cardiacRecord) {
-        cardiacRecordDao.insert(cardiacRecord);
+    void insert(final CardiacRecord cardiacRecord) {
+        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                cardiacRecordDao.insert(cardiacRecord);
+            }
+        });
     }
 }

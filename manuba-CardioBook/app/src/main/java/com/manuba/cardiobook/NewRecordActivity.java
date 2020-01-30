@@ -1,5 +1,6 @@
 package com.manuba.cardiobook;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,11 +15,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Date;
+
 public class NewRecordActivity extends AppCompatActivity {
     EditText textSystolic;
     EditText textDiastolic;
     EditText textHeartRate;
     EditText textComment;
+
+    private CardiacRecordViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,11 @@ public class NewRecordActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            // todo: save here
+            CardiacRecord record = new CardiacRecord(new Date(), 1, 1, 1, null);
+            Intent intent = new Intent();
+            intent.putExtra(MainActivity.EXTRA_RECORD, record);
+            setResult(RESULT_OK, intent);
+            finish();
             return true;
         }
 

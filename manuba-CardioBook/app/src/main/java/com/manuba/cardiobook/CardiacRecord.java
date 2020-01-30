@@ -1,5 +1,8 @@
 package com.manuba.cardiobook;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 import androidx.annotation.NonNull;
@@ -9,7 +12,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "cardiac_record")
-public class CardiacRecord {
+public class CardiacRecord implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cr_id")
     private long crid;
@@ -44,6 +47,18 @@ public class CardiacRecord {
         setDiastolicPressure(diastolicPressure);
         setHeartRate(heartRate);
         setComment(comment);
+    }
+
+    public CardiacRecord(@NonNull Date dateTime,
+                         int systolicPressure,
+                         int diastolicPressure,
+                         int heartRate,
+                         String comment) {
+        this.dateTime = dateTime;
+        this.systolicPressure = systolicPressure;
+        this.diastolicPressure = diastolicPressure;
+        this.heartRate = heartRate;
+        this.comment = comment;
     }
 
     public void setDate(String dateInput) {
@@ -103,4 +118,42 @@ public class CardiacRecord {
     public Date getDateTime() { return dateTime; }
 
     public void setDateTime(Date date) { this.dateTime = date; }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(crid);
+        dest.writeLong(dateTime.getTime());
+        dest.writeInt(systolicPressure);
+        dest.writeInt(diastolicPressure);
+        dest.writeInt(heartRate);
+        dest.writeString(comment);
+    }
+
+    public static final Parcelable.Creator<CardiacRecord> CREATOR
+            = new Parcelable.Creator<CardiacRecord>() {
+
+        @Override
+        public CardiacRecord createFromParcel(Parcel source) {
+            return  new CardiacRecord(source);
+        }
+
+        @Override
+        public CardiacRecord[] newArray(int size) {
+            return new CardiacRecord[size];
+        }
+    };
+
+    private CardiacRecord(Parcel in) {
+        crid = in.readLong();
+        dateTime = new Date(in.readLong());
+        systolicPressure = in.readInt();
+        diastolicPressure = in.readInt();
+        heartRate = in.readInt();
+        comment = in.readString();
+    }
 }
