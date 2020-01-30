@@ -23,6 +23,7 @@ public class CardiacRecord implements Parcelable {
     @ColumnInfo(name = "cr_id")
     private long crid;
 
+    @NonNull
     @ColumnInfo(name = "date_time")
     private Date dateTime;
 
