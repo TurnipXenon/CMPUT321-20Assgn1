@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7368e725a883887220f546a12da62650",
+    "identityHash": "4039dedab4ce30a95b3a938a60cbbb97",
     "entities": [
       {
         "tableName": "cardiac_record",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cr_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date_time` INTEGER NOT NULL, `systolic` INTEGER NOT NULL, `diastolic` INTEGER NOT NULL, `heart_rate` INTEGER NOT NULL, `comment` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cr_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date_time` INTEGER, `systolic` INTEGER NOT NULL, `diastolic` INTEGER NOT NULL, `heart_rate` INTEGER NOT NULL, `comment` TEXT)",
         "fields": [
           {
             "fieldPath": "crid",
@@ -18,7 +18,7 @@
             "fieldPath": "dateTime",
             "columnName": "date_time",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "systolicPressure",
@@ -58,7 +58,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7368e725a883887220f546a12da62650')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4039dedab4ce30a95b3a938a60cbbb97')"
     ]
   }
 }

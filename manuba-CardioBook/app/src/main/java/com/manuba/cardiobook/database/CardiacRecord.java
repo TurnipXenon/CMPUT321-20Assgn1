@@ -2,6 +2,7 @@ package com.manuba.cardiobook.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -23,7 +24,6 @@ public class CardiacRecord implements Parcelable {
     @ColumnInfo(name = "cr_id")
     private long crid;
 
-    @NonNull
     @ColumnInfo(name = "date_time")
     private Date dateTime;
 
@@ -89,7 +89,9 @@ public class CardiacRecord implements Parcelable {
             currentCalendar.set(Calendar.YEAR, inputCalendar.get(Calendar.YEAR));
             currentCalendar.set(Calendar.MONTH, inputCalendar.get(Calendar.MONTH));
             currentCalendar.set(Calendar.DAY_OF_MONTH, inputCalendar.get(Calendar.DAY_OF_MONTH));
-        } catch (ParseException ignore) {}
+        } catch (ParseException ignore) {
+            Log.w("Custom", "setDate: Invalid date format");
+        }
     }
 
     public String getDate() {
@@ -112,7 +114,9 @@ public class CardiacRecord implements Parcelable {
             currentCalendar.setTime(dateTime);
             currentCalendar.set(Calendar.HOUR_OF_DAY, inputCalendar.get(Calendar.HOUR_OF_DAY));
             currentCalendar.set(Calendar.MINUTE, inputCalendar.get(Calendar.MINUTE));
-        } catch (ParseException ignore) {}
+        } catch (ParseException ignore) {
+            Log.w("Custom", "setTime: Invalid time format");
+        }
     }
 
     public String getTime() {
@@ -130,7 +134,11 @@ public class CardiacRecord implements Parcelable {
     }
 
     public void setSystolicPressure(int systolicPressure) {
-        this.systolicPressure = systolicPressure;
+        if (systolicPressure >= 0) {
+            this.systolicPressure = systolicPressure;
+        } else {
+            Log.w("Custom", "setSystolicPressure: only non-negative systolic pressures");
+        }
     }
 
     public int getDiastolicPressure() {
@@ -138,7 +146,11 @@ public class CardiacRecord implements Parcelable {
     }
 
     public void setDiastolicPressure(int diastolicPressure) {
-        this.diastolicPressure = diastolicPressure;
+        if (diastolicPressure >= 0) {
+            this.diastolicPressure = diastolicPressure;
+        } else {
+            Log.w("Custom", "setDiastolicPressure: only non-negative diastolic pressures");
+        }
     }
 
     public int getHeartRate() {
@@ -146,7 +158,11 @@ public class CardiacRecord implements Parcelable {
     }
 
     public void setHeartRate(int heartRate) {
-        this.heartRate = heartRate;
+        if (heartRate >= 0) {
+            this.heartRate = heartRate;
+        } else {
+            Log.w("Custom", "setHeartRate: only non-negative heart rates");
+        }
     }
 
     public String getComment() {
@@ -159,7 +175,10 @@ public class CardiacRecord implements Parcelable {
 
     public long getCrid() { return crid; }
 
-    public void setCrid(long crid) { this.crid = crid; }
+    // warning: don't use this; only needed for room
+    public void setCrid(long crid) {
+        this.crid = crid;
+    }
 
     public Date getDateTime() { return dateTime; }
 
