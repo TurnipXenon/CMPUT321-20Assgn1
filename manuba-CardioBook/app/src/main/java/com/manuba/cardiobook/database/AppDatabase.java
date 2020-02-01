@@ -1,8 +1,6 @@
-package com.manuba.cardiobook;
+package com.manuba.cardiobook.database;
 
 import android.content.Context;
-
-import com.manuba.cardiobook.CardiacRecord;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -10,7 +8,6 @@ import java.util.concurrent.Executors;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 @Database(entities = {CardiacRecord.class}, version = 1, exportSchema = true)

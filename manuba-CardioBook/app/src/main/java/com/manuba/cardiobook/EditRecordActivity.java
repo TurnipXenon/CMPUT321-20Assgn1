@@ -3,15 +3,17 @@ package com.manuba.cardiobook;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.manuba.cardiobook.database.CardiacRecord;
+import com.manuba.cardiobook.database.CardiacRecordViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 
 import android.util.Log;
 import android.view.Menu;
@@ -27,9 +29,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class NewRecordActivity extends AppCompatActivity
+public class EditRecordActivity extends AppCompatActivity
         implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
-    private final static String DATE_PATTERN = "";
+    public final static String CARDIAC_RECORD_KEY = "CARDIAC_RECORD_KEY";
+
     private final static int INVALID_VALUE = -1;
 
     TextView textDate;
@@ -50,7 +53,10 @@ public class NewRecordActivity extends AppCompatActivity
     private int diastolic;
     private int heartRate;
     private String comment;
+    private boolean gotData;
+    private CardiacRecord cardiacRecord;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +94,7 @@ public class NewRecordActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        NewRecordActivity.this, NewRecordActivity.this,
+                        EditRecordActivity.this, EditRecordActivity.this,
                         calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                         calendar.get(Calendar.DAY_OF_MONTH)
                 );
@@ -100,12 +106,48 @@ public class NewRecordActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        NewRecordActivity.this, NewRecordActivity.this,
+                        EditRecordActivity.this, EditRecordActivity.this,
                         calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE), false);
                 timePickerDialog.show();
             }
         });
+
+        // loading the record if it exists
+        viewModel = CardiacRecordViewModel.create(getApplication());
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.containsKey(CARDIAC_RECORD_KEY)){
+            long index = bundle.getLong(CARDIAC_RECORD_KEY);
+            gotData = false;
+            viewModel.getRecord(index).observe(this, new Observer<CardiacRecord>() {
+                @Override
+                public void onChanged(CardiacRecord cardiacRecord) {
+                    if (!gotData) {
+                        // update stuff
+                        EditRecordActivity.this.cardiacRecord = cardiacRecord;
+                        if (cardiacRecord != null) {
+                            calendar.setTime(cardiacRecord.getDateTime());
+                            systolic = cardiacRecord.getSystolicPressure();
+                            diastolic = cardiacRecord.getDiastolicPressure();
+                            heartRate = cardiacRecord.getHeartRate();
+                            comment = cardiacRecord.getComment();
+
+                            updateDateTime();
+                            textSystolic.setText(Integer.toString(systolic));
+                            textDiastolic.setText(Integer.toString(diastolic));
+                            textHeartRate.setText(Integer.toString(heartRate));
+
+                            if (comment != null) {
+                                textComment.setText(comment);
+                            }
+                        } else {
+                            Toast.makeText(EditRecordActivity.this, "Error loading data", Toast.LENGTH_SHORT).show();
+                        }
+                        gotData = true;
+                    }
+                }
+            });
+        }
     }
 
 
@@ -130,15 +172,25 @@ public class NewRecordActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
             }
 
-            CardiacRecord record = new CardiacRecord(
-                    new Date(calendar.getTimeInMillis()),
-                    systolic,
-                    diastolic,
-                    heartRate,
-                    comment);
-            Intent intent = new Intent();
-            intent.putExtra(MainActivity.EXTRA_RECORD, record);
-            setResult(RESULT_OK, intent);
+            if (cardiacRecord != null) {
+                cardiacRecord.setDateTime(new Date(calendar.getTimeInMillis()));
+                cardiacRecord.setSystolicPressure(systolic);
+                cardiacRecord.setDiastolicPressure(diastolic);
+                cardiacRecord.setHeartRate(heartRate);
+                cardiacRecord.setComment(comment);
+                viewModel.update(cardiacRecord);
+                // todo: fix
+            } else {
+                cardiacRecord = new CardiacRecord(
+                        new Date(calendar.getTimeInMillis()),
+                        systolic,
+                        diastolic,
+                        heartRate,
+                        comment);
+
+                viewModel.insert(cardiacRecord);
+            }
+
             finish();
             return true;
         }

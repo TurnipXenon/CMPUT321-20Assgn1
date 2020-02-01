@@ -1,4 +1,4 @@
-package com.manuba.cardiobook;
+package com.manuba.cardiobook.database;
 
 import java.util.Date;
 

@@ -4,32 +4,27 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.manuba.cardiobook.database.CardiacRecord;
+import com.manuba.cardiobook.database.CardiacRecordViewModel;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    public static final int NEW_RECORD_ACTIVITY_REQUEST_CODE = 1;
-    public static final String EXTRA_RECORD = "com.manuba.cardiobook.RECORD";
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener {
+    private final static int INVALID_INDEX = -1;
 
     private RecyclerView recyclerView;
     private RecordListAdapter adapter;
-    private CardiacRecordViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        viewModel = new ViewModelProvider.AndroidViewModelFactory(
-                getApplication()).create(CardiacRecordViewModel.class);
+        CardiacRecordViewModel viewModel = CardiacRecordViewModel.create(getApplication());
         viewModel.getAllRecords().observe(this, new Observer<List<CardiacRecord>>() {
             @Override
             public void onChanged(List<CardiacRecord> cardiacRecords) {
@@ -52,10 +46,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<CardiacRecord> records = new ArrayList<>();
-        records.add(new CardiacRecord("", "", 1, 1, 1, "Yeah"));
-
-        adapter = new RecordListAdapter(records);
+        adapter = new RecordListAdapter(this);
         recyclerView.setAdapter(adapter);
 
         // todo: remove
@@ -63,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NewRecordActivity.class);
-                startActivityForResult(intent, NEW_RECORD_ACTIVITY_REQUEST_CODE);
+                // goes to record activity without any records to edit
+                goToEditRecordActivity(INVALID_INDEX);
             }
         });
     }
@@ -92,20 +83,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onClick(final View view) {
+        int position = recyclerView.getChildLayoutPosition(view);
+        goToEditRecordActivity(position);
+    }
 
-        if (requestCode == NEW_RECORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK
-            && data != null && data.getExtras() != null) {
-            // todo: do your stuff here
-             CardiacRecord cardiacRecord = data.getExtras().getParcelable(EXTRA_RECORD);
-            Log.d("Potato", "onActivityResult: ");
-             viewModel.insert(cardiacRecord);
-            Toast.makeText(
-                    getApplicationContext(),
-                    R.string.save_successful,
-                    Toast.LENGTH_LONG
-            ).show();
+    private void goToEditRecordActivity(int position) {
+        Intent intent = new Intent(MainActivity.this, EditRecordActivity.class);
+
+        if (position != INVALID_INDEX) {
+            CardiacRecord cardiacRecord = adapter.getItem(position);
+
+            if (cardiacRecord != null) {
+                Bundle bundle = new Bundle();
+                bundle.putLong(EditRecordActivity.CARDIAC_RECORD_KEY, cardiacRecord.getCrid());
+                intent.putExtras(bundle);
+            }
         }
+
+        startActivity(intent);
     }
 }

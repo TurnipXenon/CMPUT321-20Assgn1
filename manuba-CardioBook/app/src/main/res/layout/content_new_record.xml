@@ -9,7 +9,7 @@
     android:layout_marginRight="@dimen/horizontal_margin"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".NewRecordActivity"
+    tools:context=".EditRecordActivity"
     tools:showIn="@layout/activity_new_record">
 
     <TextView

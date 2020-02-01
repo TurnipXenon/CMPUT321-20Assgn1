@@ -5,14 +5,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Collection;
+import com.manuba.cardiobook.database.CardiacRecord;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.StandardViewHolder> {
-    List<CardiacRecord> dataset;
+
+    private List<CardiacRecord> dataset;
+    private View.OnClickListener onClickListener;
 
     static class StandardViewHolder extends RecyclerView.ViewHolder {
         TextView textDate;
@@ -22,7 +26,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         TextView textHeartRate;
         TextView textComment;
 
-        public StandardViewHolder(@NonNull View itemView) {
+        StandardViewHolder(@NonNull View itemView) {
             super(itemView);
             textDate = itemView.findViewById(R.id.item_main_list_text_date);
             textTime = itemView.findViewById(R.id.item_main_list_text_time);
@@ -33,8 +37,9 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         }
     }
 
-    public RecordListAdapter(@NonNull List<CardiacRecord> dataset) {
-        this.dataset = dataset;
+    public RecordListAdapter(View.OnClickListener listener) {
+        this.dataset = new ArrayList<>();
+        this.onClickListener = listener;
     }
 
     @NonNull
@@ -43,6 +48,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         View view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.item_main_list, parent, false
         );
+        view.setOnClickListener(onClickListener);
         return new StandardViewHolder(view);
     }
 
@@ -50,7 +56,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
     public void onBindViewHolder(@NonNull StandardViewHolder holder, int position) {
         CardiacRecord cardiacRecord = dataset.get(position);
 
-        holder.textDate.setText("Date" + cardiacRecord.getDate());
+        holder.textDate.setText("Date: " + cardiacRecord.getDate());
         holder.textTime.setText("Time: " + cardiacRecord.getTime());
         holder.textSystolic.setText("Systolic: " + cardiacRecord.getSystolicPressure());
         holder.textDiastolic.setText("Diastolic: " + cardiacRecord.getDiastolicPressure());
@@ -66,5 +72,10 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
     void setCardiacRecords(List<CardiacRecord> records) {
         dataset = records;
         notifyDataSetChanged();
+    }
+
+    public CardiacRecord getItem(int position) {
+        // todo put validation
+        return dataset.get(position);
     }
 }

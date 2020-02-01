@@ -1,4 +1,4 @@
-package com.manuba.cardiobook;
+package com.manuba.cardiobook.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -37,7 +37,7 @@ public class CardiacRecord implements Parcelable {
     private int heartRate;
 
     @Nullable
-    @ColumnInfo(name = "commment")
+    @ColumnInfo(name = "comment")
     private String comment;
 
     @Ignore
@@ -51,6 +51,7 @@ public class CardiacRecord implements Parcelable {
 
     public CardiacRecord() {}
 
+    @Ignore
     public CardiacRecord(@NonNull String date,
                          @NonNull String time,
                          int systolicPressure,
