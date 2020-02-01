@@ -1,5 +1,6 @@
 package com.manuba.cardiobook;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,12 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
 
         StandardViewHolder(@NonNull View itemView) {
             super(itemView);
-            textDate = itemView.findViewById(R.id.item_main_list_text_date);
-            textTime = itemView.findViewById(R.id.item_main_list_text_time);
-            textSystolic = itemView.findViewById(R.id.item_main_list_text_systolic);
-            textDiastolic = itemView.findViewById(R.id.item_main_list_text_diastolic);
-            textHeartRate = itemView.findViewById(R.id.item_main_list_text_heart_rate);
-            textComment = itemView.findViewById(R.id.item_main_list_text_comment);
+            textDate = itemView.findViewById(R.id.text_date);
+            textTime = itemView.findViewById(R.id.text_time);
+            textSystolic = itemView.findViewById(R.id.text_systolic);
+            textDiastolic = itemView.findViewById(R.id.text_diastolic);
+            textHeartRate = itemView.findViewById(R.id.text_heart_rate);
+            textComment = itemView.findViewById(R.id.text_comment);
         }
     }
 
@@ -52,16 +53,17 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         return new StandardViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull StandardViewHolder holder, int position) {
         CardiacRecord cardiacRecord = dataset.get(position);
 
-        holder.textDate.setText("Date: " + cardiacRecord.getDate());
-        holder.textTime.setText("Time: " + cardiacRecord.getTime());
-        holder.textSystolic.setText("Systolic: " + cardiacRecord.getSystolicPressure());
-        holder.textDiastolic.setText("Diastolic: " + cardiacRecord.getDiastolicPressure());
-        holder.textHeartRate.setText("Heart rate: " + cardiacRecord.getHeartRate());
-        holder.textComment.setText("Comment: " + cardiacRecord.getComment());
+        holder.textDate.setText(cardiacRecord.getDate());
+        holder.textTime.setText(cardiacRecord.getTime());
+        holder.textSystolic.setText(Integer.toString(cardiacRecord.getSystolicPressure()));
+        holder.textDiastolic.setText(Integer.toString(cardiacRecord.getDiastolicPressure()));
+        holder.textHeartRate.setText(Integer.toString(cardiacRecord.getHeartRate()));
+        holder.textComment.setText(cardiacRecord.getComment());
     }
 
     @Override

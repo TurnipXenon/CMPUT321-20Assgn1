@@ -44,7 +44,7 @@ public class CardiacRecord implements Parcelable {
     public final static String DATE_PATTERN = "yyyy-MM-dd";
 
     @Ignore
-    public final static String TIME_FORMAT = "HH:mm";
+    public final static String TIME_PATTERN = "HH:mm";
 
     @Ignore
     public static final int COMMENT_LIMIT = 20;
@@ -66,6 +66,7 @@ public class CardiacRecord implements Parcelable {
         setComment(comment);
     }
 
+    @Ignore
     public CardiacRecord(@NonNull Date dateTime,
                          int systolicPressure,
                          int diastolicPressure,
@@ -96,7 +97,7 @@ public class CardiacRecord implements Parcelable {
 
     public String getDate() {
         if (dateTime != null) {
-            DateFormat dateFormat = DateFormat.getDateInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.US);
             return dateFormat.format(dateTime);
         } else {
             // room does something that calls this function
@@ -105,7 +106,7 @@ public class CardiacRecord implements Parcelable {
     }
 
     public void setTime(String timeInput) {
-        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT, Locale.US);
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_PATTERN, Locale.US);
         try {
             Date newDate = timeFormat.parse(timeInput);
             Calendar inputCalendar = Calendar.getInstance();
@@ -121,7 +122,7 @@ public class CardiacRecord implements Parcelable {
 
     public String getTime() {
         if (dateTime != null) {
-            DateFormat timeFormat = DateFormat.getTimeInstance();
+            SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_PATTERN, Locale.US);
             return timeFormat.format(dateTime);
         } else {
             // room does something that calls this function

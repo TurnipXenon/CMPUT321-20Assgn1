@@ -288,7 +288,7 @@ public class EditRecordActivity extends AppCompatActivity
         textDate.setText(dateFormat.format(date));
 
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat timeFormat = new SimpleDateFormat(CardiacRecord.TIME_FORMAT);
+        SimpleDateFormat timeFormat = new SimpleDateFormat(CardiacRecord.TIME_PATTERN);
         textTime.setText(timeFormat.format(date));
     }
 }
