@@ -20,6 +20,21 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "cardiac_record")
 public class CardiacRecord implements Parcelable {
+    @Ignore
+    public static final int NORMAL_SYSTOLIC_LOWER = 90;
+    @Ignore
+    public static final int NORMAL_SYSTOLIC_UPPER = 140;
+
+    @Ignore
+    public static final int NORMAL_DIASTOLIC_LOWER = 60;
+    @Ignore
+    public static final int NORMAL_DIASTOLIC_UPPER = 90;
+
+    public enum PressureType {
+        Systolic,
+        Diastolic
+    }
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "cr_id")
     private long crid;
@@ -184,6 +199,25 @@ public class CardiacRecord implements Parcelable {
     public Date getDateTime() { return dateTime; }
 
     public void setDateTime(Date date) { this.dateTime = date; }
+
+    public boolean isPressureNormal(PressureType pressureType) {
+        switch (pressureType) {
+            case Systolic:
+                Log.d("Custom", "isPressureNormal: " + NORMAL_SYSTOLIC_LOWER);
+                Log.d("Custom", "isPressureNormal: " + systolicPressure);
+                Log.d("Custom", "isPressureNormal: " + NORMAL_SYSTOLIC_UPPER);
+                Log.d("Custom", "isPressureNormal: " + ((NORMAL_SYSTOLIC_LOWER < systolicPressure) &&
+                        (systolicPressure < NORMAL_SYSTOLIC_UPPER)));
+                return (NORMAL_SYSTOLIC_LOWER < systolicPressure) &&
+                        (systolicPressure < NORMAL_SYSTOLIC_UPPER);
+            case Diastolic:
+                return (NORMAL_DIASTOLIC_LOWER < diastolicPressure) &&
+                        (diastolicPressure < NORMAL_DIASTOLIC_UPPER);
+            default:
+                Log.w("Custom", "isPressureNormal: Unknown case: " + pressureType.toString());
+                return false;
+        }
+    }
 
     @Override
     public int describeContents() {

@@ -50,7 +50,7 @@
             android:layout_margin="8dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/label_heart_rate"
-            app:layout_constraintEnd_toStartOf="@+id/label_diastolic"
+            app:layout_constraintEnd_toStartOf="@+id/layout_diastolic"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_date"
@@ -80,7 +80,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/label_diastolic"
+            android:id="@+id/layout_diastolic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -91,7 +91,7 @@
             app:layout_constraintTop_toTopOf="@id/layout_systolic">
 
             <TextView
-                android:id="@+id/label_diasstolic"
+                android:id="@+id/label_diastolic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Diastolic"
@@ -150,7 +150,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:text="beats / minute"
+                android:text="beats / \nminute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"

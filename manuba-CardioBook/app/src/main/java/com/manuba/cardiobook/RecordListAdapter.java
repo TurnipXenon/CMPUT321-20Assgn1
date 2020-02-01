@@ -1,6 +1,8 @@
 package com.manuba.cardiobook;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,12 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         TextView textHeartRate;
         TextView textComment;
 
+        View layoutSystolic;
+        View layoutDiastolic;
+        View layoutComment;
+        TextView labelSystolic;
+        TextView labelDiastolic;
+
         StandardViewHolder(@NonNull View itemView) {
             super(itemView);
             textDate = itemView.findViewById(R.id.text_date);
@@ -35,10 +43,70 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
             textDiastolic = itemView.findViewById(R.id.text_diastolic);
             textHeartRate = itemView.findViewById(R.id.text_heart_rate);
             textComment = itemView.findViewById(R.id.text_comment);
+
+            layoutSystolic = itemView.findViewById(R.id.layout_systolic);
+            layoutDiastolic = itemView.findViewById(R.id.layout_diastolic);
+            layoutComment = itemView.findViewById(R.id.label_comment);
+
+            labelSystolic = itemView.findViewById(R.id.label_systolic);
+            labelDiastolic = itemView.findViewById(R.id.label_diastolic);
+        }
+
+        void setCommentFromCardiac(@NonNull CardiacRecord cardiacRecord) {
+            String comment = cardiacRecord.getComment();
+            if (comment != null && !comment.isEmpty()) {
+                layoutComment.setVisibility(View.VISIBLE);
+                textComment.setText(comment);
+                textComment.setVisibility(View.VISIBLE);
+            } else {
+                layoutComment.setVisibility(View.GONE);
+                textComment.setVisibility(View.GONE);
+            }
+        }
+
+        @SuppressLint("SetTextI18n")
+        void setPressure(@NonNull CardiacRecord cardiacRecord, CardiacRecord.PressureType pressureType){
+            boolean isNormal;
+            int value;
+            View layout;
+            TextView textView;
+            TextView label;
+
+            switch (pressureType) {
+                case Systolic:
+                    isNormal = cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Systolic);
+                    Log.d("Warning", "setPressure: " + isNormal);
+                    value = cardiacRecord.getSystolicPressure();
+                    layout = layoutSystolic;
+                    textView = textSystolic;
+                    label = labelSystolic;
+                    break;
+                case Diastolic:
+                    isNormal = cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Diastolic);
+                    value = cardiacRecord.getDiastolicPressure();
+                    layout = layoutDiastolic;
+                    textView = textDiastolic;
+                    label = labelDiastolic;
+                    break;
+                default:
+                    Log.w("Custom", "setPressure: Unknown pressure: " + pressureType.toString());
+                    return;
+            }
+
+            textView.setText(Integer.toString(value));
+
+            Log.d("Custom", "setPressure: " + isNormal);
+            if (isNormal) {
+                layout.setBackgroundColor(Color.WHITE);
+                label.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            } else {
+                layout.setBackgroundColor(Color.RED);
+                label.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_warning_black_24dp, 0, 0, 0);
+            }
         }
     }
 
-    public RecordListAdapter(View.OnClickListener listener) {
+    RecordListAdapter(View.OnClickListener listener) {
         this.dataset = new ArrayList<>();
         this.onClickListener = listener;
     }
@@ -60,9 +128,15 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
 
         holder.textDate.setText(cardiacRecord.getDate());
         holder.textTime.setText(cardiacRecord.getTime());
-        holder.textSystolic.setText(Integer.toString(cardiacRecord.getSystolicPressure()));
-        holder.textDiastolic.setText(Integer.toString(cardiacRecord.getDiastolicPressure()));
+
+        // todo put warning here
+        holder.setPressure(cardiacRecord, CardiacRecord.PressureType.Systolic);
+        holder.setPressure(cardiacRecord, CardiacRecord.PressureType.Diastolic);
+
         holder.textHeartRate.setText(Integer.toString(cardiacRecord.getHeartRate()));
+
+        // todo remove comment when there's none
+        holder.setCommentFromCardiac(cardiacRecord);
         holder.textComment.setText(cardiacRecord.getComment());
     }
 
@@ -76,7 +150,7 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         notifyDataSetChanged();
     }
 
-    public CardiacRecord getItem(int position) {
+    CardiacRecord getItem(int position) {
         // todo put validation
         return dataset.get(position);
     }
