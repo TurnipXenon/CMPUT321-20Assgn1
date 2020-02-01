@@ -25,7 +25,7 @@ public class CardiacRecordViewModel extends AndroidViewModel {
         allRecords = repository.getAllCardiacRecords();
     }
 
-    public static CardiacRecordViewModel create(Application application) {
+    public static CardiacRecordViewModel create(@NonNull Application application) {
         return new ViewModelProvider.AndroidViewModelFactory(
                 application).create(CardiacRecordViewModel.class);
     }
@@ -38,11 +38,15 @@ public class CardiacRecordViewModel extends AndroidViewModel {
         return repository.getCardiacRecord(index);
     }
 
-    public void insert(CardiacRecord cardiacRecord) {
+    public void insert(@NonNull CardiacRecord cardiacRecord) {
         repository.insert(cardiacRecord);
     }
 
-    public void update(CardiacRecord cardiacRecord) {
+    public void update(@NonNull CardiacRecord cardiacRecord) {
         repository.update(cardiacRecord);
+    }
+
+    public void delete(@NonNull CardiacRecord cardiacRecord) {
+        repository.delete(cardiacRecord);
     }
 }

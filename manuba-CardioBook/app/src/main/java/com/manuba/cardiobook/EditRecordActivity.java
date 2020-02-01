@@ -55,6 +55,8 @@ public class EditRecordActivity extends AppCompatActivity
     private String comment;
     private boolean gotData;
     private CardiacRecord cardiacRecord;
+    private MenuItem menuActionDelete; // needed to hide delete
+    private boolean hideActionDelete;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -117,6 +119,7 @@ public class EditRecordActivity extends AppCompatActivity
         viewModel = CardiacRecordViewModel.create(getApplication());
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey(CARDIAC_RECORD_KEY)){
+            hideActionDelete = false;
             long index = bundle.getLong(CARDIAC_RECORD_KEY);
             gotData = false;
             viewModel.getRecord(index).observe(this, new Observer<CardiacRecord>() {
@@ -147,6 +150,8 @@ public class EditRecordActivity extends AppCompatActivity
                     }
                 }
             });
+        } else {
+            hideActionDelete = true;
         }
     }
 
@@ -155,6 +160,12 @@ public class EditRecordActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_record, menu);
+
+        menuActionDelete = menu.findItem(R.id.action_delete);
+        if (hideActionDelete) {
+            menuActionDelete.setVisible(false);
+        }
+
         return true;
     }
 
@@ -179,7 +190,6 @@ public class EditRecordActivity extends AppCompatActivity
                 cardiacRecord.setHeartRate(heartRate);
                 cardiacRecord.setComment(comment);
                 viewModel.update(cardiacRecord);
-                // todo: fix
             } else {
                 cardiacRecord = new CardiacRecord(
                         new Date(calendar.getTimeInMillis()),
@@ -191,6 +201,12 @@ public class EditRecordActivity extends AppCompatActivity
                 viewModel.insert(cardiacRecord);
             }
 
+            finish();
+            return true;
+        }
+
+        if (cardiacRecord != null && id == R.id.action_delete) {
+            viewModel.delete(cardiacRecord);
             finish();
             return true;
         }

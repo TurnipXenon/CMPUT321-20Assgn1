@@ -6,4 +6,5 @@
     <string name="empty_not_saved">Record was not save</string>
     <string name="save_successful">Save successful</string>
     <string name="placeholder">Placeholder</string>
+    <string name="action_delete">Delete</string>
 </resources>

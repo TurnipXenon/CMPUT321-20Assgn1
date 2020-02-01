@@ -8,13 +8,14 @@ import com.manuba.cardiobook.database.CardiacRecordDao;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 public class CardiacRecordRepository {
     private CardiacRecordDao cardiacRecordDao;
     private LiveData<List<CardiacRecord>> allWords;
 
-    CardiacRecordRepository(Application application) {
+    CardiacRecordRepository(@NonNull Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         cardiacRecordDao = db.cardiacRecordDao();
         allWords = cardiacRecordDao.getAll();
@@ -28,7 +29,7 @@ public class CardiacRecordRepository {
         return cardiacRecordDao.getCardiacRecord(index);
     }
 
-    public void insert(final CardiacRecord cardiacRecord) {
+    public void insert(@NonNull final CardiacRecord cardiacRecord) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -37,11 +38,20 @@ public class CardiacRecordRepository {
         });
     }
 
-    public void update(final CardiacRecord cardiacRecord) {
+    public void update(@NonNull final CardiacRecord cardiacRecord) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 cardiacRecordDao.update(cardiacRecord);
+            }
+        });
+    }
+
+    public void delete(@NonNull final CardiacRecord cardiacRecord) {
+        AppDatabase.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                cardiacRecordDao.delete(cardiacRecord);
             }
         });
     }
