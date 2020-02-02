@@ -11,6 +11,11 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
+/**
+ * Gives the view models the appropriate data from the appropriate sources.
+ * It's unneeded for this project, but the experience of knowing how to use this
+ * may come useful in the future.
+ */
 public class CardiacRecordRepository {
     private CardiacRecordDao cardiacRecordDao;
     private LiveData<List<CardiacRecord>> allWords;

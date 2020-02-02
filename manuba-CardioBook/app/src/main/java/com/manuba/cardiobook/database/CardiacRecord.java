@@ -18,6 +18,9 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+/**
+ * A collection of data for each heart-related records
+ */
 @Entity(tableName = "cardiac_record")
 public class CardiacRecord implements Parcelable {
     @Ignore

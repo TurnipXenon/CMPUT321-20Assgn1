@@ -13,6 +13,9 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+/**
+ * Provides database interactions related to CardiacRecords
+ */
 @Dao
 public interface CardiacRecordDao {
     @Query("SELECT * FROM cardiac_record")

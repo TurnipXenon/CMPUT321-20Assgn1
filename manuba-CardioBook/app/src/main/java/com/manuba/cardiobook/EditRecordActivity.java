@@ -32,6 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * User interface for editing the cardiac records
+ */
 public class EditRecordActivity extends AppCompatActivity
         implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
     public final static String CARDIAC_RECORD_KEY = "CARDIAC_RECORD_KEY";
@@ -61,7 +64,6 @@ public class EditRecordActivity extends AppCompatActivity
     private String comment;
     private boolean gotData;
     private CardiacRecord cardiacRecord;
-    private MenuItem menuActionDelete; // needed to hide delete
     private boolean hideActionDelete;
 
     @SuppressLint("SetTextI18n")
@@ -72,15 +74,9 @@ public class EditRecordActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        setTitle("Cardiac record");
 
         textDate = findViewById(R.id.new_record_text_date);
         textTime = findViewById(R.id.new_record_text_time);
@@ -159,65 +155,66 @@ public class EditRecordActivity extends AppCompatActivity
                     }
                 }
             });
+
+
+            textSystolic.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    int num;
+                    try {
+                        num = Integer.parseInt(s.toString());
+                    } catch (NumberFormatException ignore) {
+                        return;
+                    }
+                    cardiacRecord.setSystolicPressure(num);
+                    if (cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Systolic)) {
+                        textSystolicWarning.setVisibility(View.GONE);
+                    } else {
+                        textSystolicWarning.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            textDiastolic.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    int num;
+                    try {
+                        num = Integer.parseInt(s.toString());
+                    } catch (NumberFormatException ignore) {
+                        return;
+                    }
+                    cardiacRecord.setDiastolicPressure(num);
+                    if (cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Diastolic)) {
+                        textDiastolicWarning.setVisibility(View.GONE);
+                    } else {
+                        textDiastolicWarning.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
         } else {
             hideActionDelete = true;
         }
 
-        textSystolic.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int num;
-                try {
-                    num = Integer.parseInt(s.toString());
-                } catch (NumberFormatException ignore) {
-                    return;
-                }
-                cardiacRecord.setSystolicPressure(num);
-                if (cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Systolic)) {
-                    textSystolicWarning.setVisibility(View.GONE);
-                } else {
-                    textSystolicWarning.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        textDiastolic.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int num;
-                try {
-                    num = Integer.parseInt(s.toString());
-                } catch (NumberFormatException ignore) {
-                    return;
-                }
-                cardiacRecord.setDiastolicPressure(num);
-                if (cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Diastolic)) {
-                    textDiastolicWarning.setVisibility(View.GONE);
-                } else {
-                    textDiastolicWarning.setVisibility(View.VISIBLE);
-                }
-            }
-        });
     }
 
 
@@ -226,7 +223,8 @@ public class EditRecordActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_record, menu);
 
-        menuActionDelete = menu.findItem(R.id.action_delete);
+        // needed to hide delete
+        MenuItem menuActionDelete = menu.findItem(R.id.action_delete);
         if (hideActionDelete) {
             menuActionDelete.setVisible(false);
         }
@@ -290,7 +288,7 @@ public class EditRecordActivity extends AppCompatActivity
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH,month);
-        calendar.set(Calendar.DAY_OF_MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         updateDateTime();
     }
 

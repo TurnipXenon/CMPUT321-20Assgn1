@@ -19,6 +19,9 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+/**
+ * User interface for the application's home
+ */
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener {
     private final static int INVALID_INDEX = -1;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setTitle(R.string.app_name);
 
         recyclerView = findViewById(R.id.main_recycler_view);
 
@@ -49,7 +54,6 @@ public class MainActivity extends AppCompatActivity
         adapter = new RecordListAdapter(this);
         recyclerView.setAdapter(adapter);
 
-        // todo: remove
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

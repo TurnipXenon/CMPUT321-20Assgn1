@@ -14,6 +14,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+/**
+ * Provide data to the UI
+ */
 public class CardiacRecordViewModel extends AndroidViewModel {
     private CardiacRecordRepository repository;
 

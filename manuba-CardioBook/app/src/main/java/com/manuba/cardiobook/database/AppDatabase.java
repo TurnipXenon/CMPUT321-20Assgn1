@@ -10,6 +10,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+/**
+ * Keeps the instance for the AppDatabase and
+ * keeps the executor which is used to call room
+ * operations outside the UI thread
+ */
 @Database(entities = {CardiacRecord.class}, version = 1, exportSchema = true)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {

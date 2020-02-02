@@ -16,6 +16,10 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Controls the interaction between the RecyclerView
+ * and the list of cardiac record
+ */
 public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.StandardViewHolder> {
 
     private List<CardiacRecord> dataset;
