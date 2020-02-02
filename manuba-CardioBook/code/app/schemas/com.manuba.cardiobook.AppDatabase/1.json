@@ -1,0 +1,64 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "aeb04416ff7fbd0d88dda184b821644b",
+    "entities": [
+      {
+        "tableName": "cardiac_record",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cr_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date_time` INTEGER, `systolic` INTEGER NOT NULL, `diastolic` INTEGER NOT NULL, `heart_rate` INTEGER NOT NULL, `commment` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "crid",
+            "columnName": "cr_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateTime",
+            "columnName": "date_time",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "systolicPressure",
+            "columnName": "systolic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "diastolicPressure",
+            "columnName": "diastolic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "heartRate",
+            "columnName": "heart_rate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "commment",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "cr_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aeb04416ff7fbd0d88dda184b821644b')"
+    ]
+  }
+}
