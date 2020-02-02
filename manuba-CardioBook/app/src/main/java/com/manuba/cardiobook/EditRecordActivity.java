@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,6 +44,9 @@ public class EditRecordActivity extends AppCompatActivity
     EditText textDiastolic;
     EditText textHeartRate;
     EditText textComment;
+
+    TextView textSystolicWarning;
+    TextView textDiastolicWarning;
 
     TextInputLayout inputLayoutSystolic;
     TextInputLayout inputLayoutDiastolic;
@@ -82,6 +88,9 @@ public class EditRecordActivity extends AppCompatActivity
         textDiastolic = findViewById(R.id.new_record_editText_diastolic);
         textHeartRate = findViewById(R.id.new_record_editText_heart_rate);
         textComment = findViewById(R.id.new_record_editText_comment);
+
+        textSystolicWarning = findViewById(R.id.text_systolic_warning);
+        textDiastolicWarning = findViewById(R.id.text_diastolic_warning);
 
         inputLayoutSystolic = findViewById(R.id.new_record_text_systolic);
         inputLayoutDiastolic = findViewById(R.id.new_record_text_diastolic);
@@ -153,6 +162,62 @@ public class EditRecordActivity extends AppCompatActivity
         } else {
             hideActionDelete = true;
         }
+
+        textSystolic.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int num;
+                try {
+                    num = Integer.parseInt(s.toString());
+                } catch (NumberFormatException ignore) {
+                    return;
+                }
+                cardiacRecord.setSystolicPressure(num);
+                if (cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Systolic)) {
+                    textSystolicWarning.setVisibility(View.GONE);
+                } else {
+                    textSystolicWarning.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        textDiastolic.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int num;
+                try {
+                    num = Integer.parseInt(s.toString());
+                } catch (NumberFormatException ignore) {
+                    return;
+                }
+                cardiacRecord.setDiastolicPressure(num);
+                if (cardiacRecord.isPressureNormal(CardiacRecord.PressureType.Diastolic)) {
+                    textDiastolicWarning.setVisibility(View.GONE);
+                } else {
+                    textDiastolicWarning.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
 
