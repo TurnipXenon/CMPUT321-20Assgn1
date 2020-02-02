@@ -2,10 +2,6 @@ package com.manuba.cardiobook.database;
 
 import android.app.Application;
 
-import com.manuba.cardiobook.database.AppDatabase;
-import com.manuba.cardiobook.database.CardiacRecord;
-import com.manuba.cardiobook.database.CardiacRecordDao;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,25 +12,25 @@ import androidx.lifecycle.LiveData;
  * It's unneeded for this project, but the experience of knowing how to use this
  * may come useful in the future.
  */
-public class CardiacRecordRepository {
+class CardiacRecordRepository {
     private CardiacRecordDao cardiacRecordDao;
-    private LiveData<List<CardiacRecord>> allWords;
+    private LiveData<List<CardiacRecord>> allRecords;
 
     CardiacRecordRepository(@NonNull Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         cardiacRecordDao = db.cardiacRecordDao();
-        allWords = cardiacRecordDao.getAll();
+        allRecords = cardiacRecordDao.getAll();
     }
 
-    public LiveData<List<CardiacRecord>> getAllCardiacRecords() {
-        return allWords;
+    LiveData<List<CardiacRecord>> getAllCardiacRecords() {
+        return allRecords;
     }
 
-    public LiveData<CardiacRecord> getCardiacRecord(long index) {
+    LiveData<CardiacRecord> getCardiacRecord(long index) {
         return cardiacRecordDao.getCardiacRecord(index);
     }
 
-    public void insert(@NonNull final CardiacRecord cardiacRecord) {
+    void insert(@NonNull final CardiacRecord cardiacRecord) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -43,7 +39,7 @@ public class CardiacRecordRepository {
         });
     }
 
-    public void update(@NonNull final CardiacRecord cardiacRecord) {
+    void update(@NonNull final CardiacRecord cardiacRecord) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {
@@ -52,7 +48,7 @@ public class CardiacRecordRepository {
         });
     }
 
-    public void delete(@NonNull final CardiacRecord cardiacRecord) {
+    void delete(@NonNull final CardiacRecord cardiacRecord) {
         AppDatabase.databaseWriteExecutor.execute(new Runnable() {
             @Override
             public void run() {

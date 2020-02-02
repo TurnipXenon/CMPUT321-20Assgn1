@@ -7,14 +7,14 @@ import androidx.room.TypeConverter;
 /**
  * Converts non-primitive data types for AppDatabase
  */
-public class Converters {
+class Converters {
     @TypeConverter
-    public static Date fromTimestamp(Long value) {
+    static Date fromTimestamp(Long value) {
         return value == null ? null : new Date(value);
     }
 
     @TypeConverter
-    public static Long dateToTimestamp(Date date) {
+    static Long dateToTimestamp(Date date) {
         return date == null ? 0 : date.getTime();
     }
 }

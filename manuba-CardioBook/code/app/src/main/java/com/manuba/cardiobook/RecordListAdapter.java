@@ -133,15 +133,12 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
         holder.textDate.setText(cardiacRecord.getDate());
         holder.textTime.setText(cardiacRecord.getTime());
 
-        // todo put warning here
         holder.setPressure(cardiacRecord, CardiacRecord.PressureType.Systolic);
         holder.setPressure(cardiacRecord, CardiacRecord.PressureType.Diastolic);
 
         holder.textHeartRate.setText(Integer.toString(cardiacRecord.getHeartRate()));
 
-        // todo remove comment when there's none
         holder.setCommentFromCardiac(cardiacRecord);
-        holder.textComment.setText(cardiacRecord.getComment());
     }
 
     @Override
@@ -155,7 +152,10 @@ public class RecordListAdapter extends RecyclerView.Adapter<RecordListAdapter.St
     }
 
     CardiacRecord getItem(int position) {
-        // todo put validation
-        return dataset.get(position);
+        if ((0 <= position) && (position < getItemCount())) {
+            return dataset.get(position);
+        } else {
+            return null;
+        }
     }
 }
